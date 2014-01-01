@@ -217,6 +217,55 @@ namespace MonoNotepadClone
             }
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if (e.CloseReason == CloseReason.WindowsShutDown) return;
+
+            if (textHasChanged == true)
+            {
+                var result = MessageBox.Show("You have unsaved changes, do you wish to save?", "Warning!", MessageBoxButtons.YesNoCancel);
+
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        if (isFirstSave == false)
+                        {
+                            writeFile();
+
+                        }
+                        else if (isFirstSave == true)
+                        {
+                            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                            saveFileDialog1.InitialDirectory = fileToOpen;
+                            saveFileDialog1.Title = "Select file to save";
+                            saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                            fileToOpen = saveFileDialog1.FileName.ToString();
+                            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                            {
+                                writeFile();
+                            }
+                        }
+                        break;
+                    case DialogResult.No:
+                        Application.Exit();
+                        break;
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                    default:
+
+                        break;
+
+                }
+            }
+            else
+            {
+                Application.Exit();
+            }
+
+        }
+
        
 
         
