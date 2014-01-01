@@ -7,16 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using Ini;
 
 namespace MonoNotepadClone
 {
     public partial class MainForm : Form
     {
+        IniFile ini = new IniFile(Application.StartupPath + "\\settings.ini");
+        
         public bool isFirstSave = true;
         public bool textHasChanged = false;
+        public bool wordWrapIsChecked = true;
         public string fileToOpen = "";
         public string fileToSave = "";
+        
         public static string userDocumentsDirectory = System.Environment.SpecialFolder.MyDocuments.ToString();
+
 
         public MainForm()
         {
@@ -171,16 +177,38 @@ namespace MonoNotepadClone
 
         private void wordWrapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (wordWrapToolStripMenuItem.Checked == true)
-            {
-                textBox1.WordWrap = false;
-                wordWrapToolStripMenuItem.Checked = false;
-            }
-            else if (wordWrapToolStripMenuItem.Checked == false)
+            if (wordWrapIsChecked == true)
             {
                 textBox1.WordWrap = true;
-                wordWrapToolStripMenuItem.Checked = true;
+                //wordWrapToolStripMenuItem.Checked = false;
             }
+            else if (wordWrapIsChecked == false)
+            {
+                textBox1.WordWrap = false;
+                //wordWrapToolStripMenuItem.Checked = true;
+            }
+        }
+
+        private void wordWrapToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            var isChecked = wordWrapToolStripMenuItem.CheckState;
+
+            switch (isChecked)
+            {
+                case(CheckState.Checked):
+                    wordWrapIsChecked = true;
+                    break;
+                case(CheckState.Unchecked):
+                    wordWrapIsChecked = false;
+                    break;
+
+            }
+                        
+        }
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+
         }
 
         ///<summary>
@@ -220,7 +248,7 @@ namespace MonoNotepadClone
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
-            if (e.CloseReason == CloseReason.WindowsShutDown) return;
+            //if (e.CloseReason == CloseReason.WindowsShutDown) return;
 
             if (textHasChanged == true)
             {
@@ -248,7 +276,7 @@ namespace MonoNotepadClone
                         }
                         break;
                     case DialogResult.No:
-                        Application.Exit();
+                        //Application will exit
                         break;
                     case DialogResult.Cancel:
                         e.Cancel = true;
@@ -265,6 +293,10 @@ namespace MonoNotepadClone
             }
 
         }
+
+        
+
+        
 
        
 
