@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Ini;
+using MonoNotepadClone.Forms;
 
 namespace MonoNotepadClone
 {
@@ -20,7 +21,8 @@ namespace MonoNotepadClone
         public bool wordWrapIsChecked = true;
         public string fileToOpen = "";
         public string fileToSave = "";
-        
+
+        static Disarm disarm = new Disarm();
         public static string userDocumentsDirectory = System.Environment.SpecialFolder.MyDocuments.ToString();
 
 
@@ -77,15 +79,18 @@ namespace MonoNotepadClone
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            MainForm main = new MainForm();
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.InitialDirectory = userDocumentsDirectory;
             openFileDialog1.Title = "Select text file";
             openFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                toolStripStatusLabel1.Text = openFileDialog1.FileName.ToString();
                 fileToOpen = openFileDialog1.FileName.ToString();
-                isFirstSave = false;
                 readFile();
+                isFirstSave = false;
+                
             }
         }
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -106,6 +111,7 @@ namespace MonoNotepadClone
             isFirstSave = true;
             textBox1.ResetText();
             textHasChanged = false;
+            toolStripStatusLabel1.Text = "New File";
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -207,9 +213,31 @@ namespace MonoNotepadClone
         }
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-
+            Control ctrl = this.ActiveControl;
+            if (ctrl != null)
+            {
+                if (ctrl is TextBox)
+                {
+                    TextBox tx = (TextBox)ctrl;
+                    tx.SelectAll();
+                    
+                }
+            }
         }
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+            
+            if (textBox1.Text.Contains("Killswitch Engage"))
+            {
+                disarm.ShowDialog();
+            }
+            else if (textBox1.Text.Contains("kse"))
+            {
+                disarm.ShowDialog();
+            }
+            
+        }
+
 
         ///<summary>
         ///All the user made methods.
@@ -294,6 +322,7 @@ namespace MonoNotepadClone
 
         }
 
+        
         
 
         
