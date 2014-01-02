@@ -33,47 +33,7 @@ namespace MonoNotepadClone
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (textHasChanged == true)
-            {
-                var result = MessageBox.Show("You have unsaved changes, do you wish to save?", "Warning!", MessageBoxButtons.YesNoCancel);
-
-                switch (result)
-                { 
-                    case DialogResult.Yes:
-                        if (isFirstSave == false)
-                        {
-                            writeFile();
-
-                        }
-                        else if (isFirstSave == true)
-                        {
-                            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-                            saveFileDialog1.InitialDirectory = fileToOpen;
-                            saveFileDialog1.Title = "Select file to save";
-                            saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-                            fileToOpen = saveFileDialog1.FileName.ToString();
-                            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                            {
-                                writeFile();
-                            }
-                        }
-                        break;
-                    case DialogResult.No:
-                        Application.Exit();
-                        break;
-                    case DialogResult.Cancel:
-                        //do nothing
-                        break;
-                    default:
-
-                        break;
-
-                }
-            }
-            else
-            {
-                Application.Exit();
-            }
+           Application.Exit();
             
         }
 
@@ -115,7 +75,7 @@ namespace MonoNotepadClone
                 }
             }
             fileToOpen = saveFileDialog1.FileName.ToString();
-
+            toolStripStatusLabel1.Text = fileToOpen.ToString();
         }
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -136,12 +96,15 @@ namespace MonoNotepadClone
                 {
                     fileToOpen = saveFileDialog1.FileName.ToString();
                     writeFile();
+                    isFirstSave = false;
                 }
             }
             else
             {
+                isFirstSave = false;
                 writeFile();
             }
+            toolStripStatusLabel1.Text = fileToOpen.ToString();
         }
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -248,7 +211,11 @@ namespace MonoNotepadClone
             }
             
         }
-
+        private void insertTimeAndDateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String curTimeAndDate = System.DateTime.Now.ToString();
+            textBox1.AppendText("" + curTimeAndDate + "");
+        }
 
         ///<summary>
         ///All the user made methods.
@@ -332,6 +299,8 @@ namespace MonoNotepadClone
             }
 
         }
+
+        
 
         
         
