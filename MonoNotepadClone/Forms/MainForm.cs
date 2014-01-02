@@ -99,11 +99,22 @@ namespace MonoNotepadClone
             saveFileDialog1.InitialDirectory = userDocumentsDirectory;
             saveFileDialog1.Title = "Select file to save";
             saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            fileToOpen = saveFileDialog1.FileName.ToString();
+            
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                writeFile();
+                try
+                {
+                    using (StreamWriter sw = new StreamWriter(saveFileDialog1.FileName.ToString()))
+                    {
+                        sw.WriteLine(textBox1.Text.ToString());
+                    }
+                }
+                catch (Exception p)
+                {
+                    MessageBox.Show("The file could not be saved:\n" + p.Message);
+                }
             }
+            fileToOpen = saveFileDialog1.FileName.ToString();
 
         }
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
